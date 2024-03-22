@@ -8,8 +8,10 @@ import static net.kernevez.pbhibernateproxy.TsidUtils.randomTsid;
 
 public class GeneratorTest {
     @Test
-    void generate(){
+    void generate() {
         Logger logger = LoggerFactory.getLogger(PbHibernateProxyApplication.class);
-        logger.info("Id={}", randomTsid().toLong());
+        for (int i = 0; i < 10; i++) {
+            logger.info("Id={}", randomTsid().toLong());
+        }
     }
 }

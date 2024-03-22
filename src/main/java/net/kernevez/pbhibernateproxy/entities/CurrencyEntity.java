@@ -7,11 +7,12 @@ import org.hibernate.annotations.NaturalIdCache;
 
 @NaturalIdCache
 @Entity
-@Table( name ="INSTRUMENT")
+@Table(name = "CURRENCY")
 @org.hibernate.annotations.Cache(
         usage = CacheConcurrencyStrategy.READ_WRITE
 )
-public class InstrumentEntity {
+@SuppressWarnings("JpaDataSourceORMInspection")
+public class CurrencyEntity {
     @Id
     private Long id;
     @NaturalId
@@ -21,6 +22,6 @@ public class InstrumentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BASE_CURRENCY_ISO_CODE", referencedColumnName = "isoCode")
     @SuppressWarnings("JpaDataSourceORMInspection")
-    private InstrumentEntity baseCurrency;
+    private CurrencyEntity baseCurrency;
 
 }

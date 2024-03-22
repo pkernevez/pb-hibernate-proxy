@@ -1,11 +1,11 @@
 databaseChangeLog:
 
   - changeSet:
-      id: Instrument
+      id: CURRENCY
       author: Pk
       changes:
         - createTable:
-            tableName: INSTRUMENT
+            tableName: CURRENCY
             columns:
               - column:
                   name: ID
@@ -19,32 +19,112 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                     unique: true
-                    uniqueConstraintName: IDX_UNIQUE__INSTRUMENT__NAME
+                    uniqueConstraintName: IDX_UNIQUE__CURRENCY__NAME
               - column:
                   name: ISO_CODE
                   type: varchar(3)
                   constraints:
                     nullable: true
                     unique: true
-                    uniqueConstraintName: IDX_UNIQUE__INSTRUMENT__ISO_CODE__FOR_JPA
+                    uniqueConstraintName: IDX_UNIQUE__CURRENCY__ISO_CODE__FOR_JPA
               - column:
                   name: BASE_CURRENCY_ISO_CODE
                   type: varchar(3)
                   constraints:
                     nullable: true
         - sql:
-            sql: CREATE UNIQUE INDEX IDX_UNIQUE__INSTRUMENT__ISO_CODE ON INSTRUMENT (ISO_CODE) WHERE ISO_CODE IS NOT NULL;
+            sql: CREATE UNIQUE INDEX IDX_UNIQUE__CURRENCY__ISO_CODE ON CURRENCY (ISO_CODE) WHERE ISO_CODE IS NOT NULL;
         - addForeignKeyConstraint:
-            constraintName: FK__INSTRUMENT__BASE_CURRENCY_ISO_CODE
-            baseTableName: INSTRUMENT
+            constraintName: FK__CURRENCY__BASE_CURRENCY_ISO_CODE
+            baseTableName: CURRENCY
             baseColumnNames: BASE_CURRENCY_ISO_CODE
-            referencedTableName: INSTRUMENT
+            referencedTableName: CURRENCY
             referencedColumnNames: ISO_CODE
             validate: true
         - createIndex:
             columns:
               - column:
                   name: BASE_CURRENCY_ISO_CODE
-            indexName: IDX_FK__INSTRUMENT__BASE_CURRENCY_ISO_CODE
-            tableName: INSTRUMENT
+            indexName: IDX_FK__CURRENCY__BASE_CURRENCY_ISO_CODE
+            tableName: CURRENCY
+
+  - changeSet:
+      id: AMOUNT
+      author: Pk
+      changes:
+        - createTable:
+            tableName: AMOUNT
+            columns:
+              - column:
+                  name: ID
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: QUANTITY
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CURRENCY_ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            constraintName: FK__AMOUNT__CURRENCY_ISO_CODE
+            baseTableName: AMOUNT
+            baseColumnNames: CURRENCY_ISO_CODE
+            referencedTableName: CURRENCY
+            referencedColumnNames: ISO_CODE
+            validate: true
+        - createIndex:
+            columns:
+              - column:
+                  name: CURRENCY_ISO_CODE
+            indexName: IDX_FK__AMOUNT__CURRENCY_ISO_CODE
+            tableName: AMOUNT
+
+
+  - changeSet:
+      id: FX_RATE
+      author: Pk
+      changes:
+        - createTable:
+            tableName: FX_RATE
+            columns:
+              - column:
+                  name: ID
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: BASE_CURRENCY_ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: QUOTE_CURRENCY_ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: RATE
+                  type: decimal
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: FK__FX_RATE__BASE_CURRENCY_ISO_CODE
+            baseTableName: FX_RATE
+            baseColumnNames: BASE_CURRENCY_ISO_CODE
+            referencedTableName: CURRENCY
+            referencedColumnNames: ISO_CODE
+            validate: true
+        - createIndex:
+            columns:
+              - column:
+                  name: BASE_CURRENCY_ISO_CODE
+            indexName: IDX_FK__FX_RATE__BASE_CURRENCY_ISO_CODE
+            tableName: FX_RATE
 

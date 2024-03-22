@@ -2,5 +2,5 @@ package net.kernevez.pbhibernateproxy.entities;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface InstrumentRepository extends JpaRepository<InstrumentEntity, Long> {
+public interface CurrencyRepository extends JpaRepository<CurrencyEntity, Long> {
 }
