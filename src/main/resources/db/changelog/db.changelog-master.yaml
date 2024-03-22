@@ -14,6 +14,13 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
+                  name: NAME
+                  type: varchar(20)
+                  constraints:
+                    nullable: true
+                    unique: true
+                    uniqueConstraintName: IDX_UNIQUE__INSTRUMENT__NAME
+              - column:
                   name: ISO_CODE
                   type: varchar(3)
                   constraints:
