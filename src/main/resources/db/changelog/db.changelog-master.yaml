@@ -1,0 +1,43 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: Instrument
+      author: Pk
+      changes:
+        - createTable:
+            tableName: INSTRUMENT
+            columns:
+              - column:
+                  name: ID
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: true
+                    unique: true
+                    uniqueConstraintName: IDX_UNIQUE__INSTRUMENT__ISO_CODE__FOR_JPA
+              - column:
+                  name: BASE_CURRENCY_ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: true
+        - sql:
+            sql: CREATE UNIQUE INDEX IDX_UNIQUE__INSTRUMENT__ISO_CODE ON INSTRUMENT (ISO_CODE) WHERE ISO_CODE IS NOT NULL;
+        - addForeignKeyConstraint:
+            constraintName: FK__INSTRUMENT__BASE_CURRENCY_ISO_CODE
+            baseTableName: INSTRUMENT
+            baseColumnNames: BASE_CURRENCY_ISO_CODE
+            referencedTableName: INSTRUMENT
+            referencedColumnNames: ISO_CODE
+            validate: true
+        - createIndex:
+            columns:
+              - column:
+                  name: BASE_CURRENCY_ISO_CODE
+            indexName: IDX_FK__INSTRUMENT__BASE_CURRENCY_ISO_CODE
+            tableName: INSTRUMENT
+

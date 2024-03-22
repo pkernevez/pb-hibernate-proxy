@@ -1,0 +1,20 @@
+spring:
+  config.activate.on-profile: test
+  test:
+    database:
+      replace: NONE
+  liquibase:
+    contexts: test
+  datasource:
+    url: jdbc:tc:postgresql:16:///db?TC_TMPFS=/testtmpfs:rw
+    hikari:
+      register-mbeans: true
+      autoCommit: false
+      maximum-pool-size: 2
+  jpa:
+    properties:
+      show-sql: false
+      validate: true
+logging:
+  level:
+    org.testcontainers.utility.RyukResourceReaper: error
