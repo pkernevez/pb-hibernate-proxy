@@ -16,4 +16,22 @@ public class AmountEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CURRENCY_ISO_CODE", referencedColumnName = "isoCode")
     private CurrencyEntity currency;
+
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    public AmountEntity setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
+        return this;
+    }
+
+    public CurrencyEntity getCurrency() {
+        return currency;
+    }
+
+    public AmountEntity setCurrency(CurrencyEntity currency) {
+        this.currency = currency;
+        return this;
+    }
 }

@@ -21,4 +21,30 @@ public class FxRateEntity {
 
     private BigDecimal rate;
 
+    public CurrencyEntity getBase() {
+        return base;
+    }
+
+    public FxRateEntity setBase(CurrencyEntity base) {
+        this.base = base;
+        return this;
+    }
+
+    public CurrencyEntity getQuote() {
+        return quote;
+    }
+
+    public FxRateEntity setQuote(CurrencyEntity quote) {
+        this.quote = quote;
+        return this;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public FxRateEntity setRate(BigDecimal rate) {
+        this.rate = rate;
+        return this;
+    }
 }

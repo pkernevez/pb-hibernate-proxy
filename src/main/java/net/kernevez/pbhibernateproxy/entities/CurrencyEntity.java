@@ -21,7 +21,23 @@ public class CurrencyEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BASE_CURRENCY_ISO_CODE", referencedColumnName = "isoCode")
-    @SuppressWarnings("JpaDataSourceORMInspection")
     private CurrencyEntity baseCurrency;
 
+    public String getIsoCode() {
+        return isoCode;
+    }
+
+    public CurrencyEntity setIsoCode(String isoCode) {
+        this.isoCode = isoCode;
+        return this;
+    }
+
+    public CurrencyEntity getBaseCurrency() {
+        return baseCurrency;
+    }
+
+    public CurrencyEntity setBaseCurrency(CurrencyEntity baseCurrency) {
+        this.baseCurrency = baseCurrency;
+        return this;
+    }
 }
