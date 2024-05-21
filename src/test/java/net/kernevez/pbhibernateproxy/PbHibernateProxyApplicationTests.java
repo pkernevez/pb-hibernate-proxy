@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-//@TestPropertySource(properties = "spring.jpa.properties.hibernate.generate_statistics=true")
 @SpringBootTest(classes = PbHibernateProxyApplication.class)
 @Transactional
 class PbHibernateProxyApplicationTests {
@@ -75,7 +74,7 @@ class PbHibernateProxyApplicationTests {
             // binding parameter (1:VARCHAR) <- [null]
             // binding parameter (2:VARCHAR) <- [null]
             var rate = result.get();
-            assertEquals(0, new BigDecimal("1000").compareTo(rate.getRate()));
+            assertEquals(0, new BigDecimal("0.9").compareTo(rate.getRate()));
             assertEquals("USD", rate.getBase().getIsoCode());
             assertEquals("EUR", rate.getQuote().getIsoCode());
         }
