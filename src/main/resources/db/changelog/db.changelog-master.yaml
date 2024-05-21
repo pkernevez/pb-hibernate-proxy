@@ -49,11 +49,11 @@ databaseChangeLog:
             tableName: CURRENCY
 
   - changeSet:
-      id: AMOUNT
+      id: ACCOUNT
       author: Pk
       changes:
         - createTable:
-            tableName: AMOUNT
+            tableName: ACCOUNT
             columns:
               - column:
                   name: ID
@@ -62,36 +62,81 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: QUANTITY
-                  type: decimal
+                  name: NAME
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: IDX_UNIQUE__ACCOUNT__NAME
+              - column:
+                  name: PRIMARY_CURRENCY_ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: FK__ACCOUNT__PRIMARY_CURRENCY_ISO_CODE
+            baseTableName: ACCOUNT
+            baseColumnNames: PRIMARY_CURRENCY_ISO_CODE
+            referencedTableName: CURRENCY
+            referencedColumnNames: ISO_CODE
+            validate: true
+        - createIndex:
+            tableName: ACCOUNT
+            columns:
+              - column:
+                  name: PRIMARY_CURRENCY_ISO_CODE
+            indexName: IDX_FK__ACCOUNT__PRIMARY_CURRENCY_ISO_CODE
+
+  - changeSet:
+      id: 20240131 - ACCOUNT_SECONDARY_CURRENCIES
+      author: Pk
+      changes:
+        - createTable:
+            tableName: ACCOUNT_SECONDARY_CURRENCIES
+            columns:
+              - column:
+                  name: ACCOUNT_ID
+                  type: bigint
                   constraints:
                     nullable: false
               - column:
                   name: CURRENCY_ISO_CODE
                   type: varchar(3)
                   constraints:
-                    nullable: true
+                    nullable: false
         - addForeignKeyConstraint:
-            constraintName: FK__AMOUNT__CURRENCY_ISO_CODE
-            baseTableName: AMOUNT
+            constraintName: FK__ACCOUNT_SECONDARY_CURRENCIES__CURRENCY_ISO_CODE
+            baseTableName: ACCOUNT_SECONDARY_CURRENCIES
             baseColumnNames: CURRENCY_ISO_CODE
             referencedTableName: CURRENCY
             referencedColumnNames: ISO_CODE
             validate: true
         - createIndex:
+            tableName: ACCOUNT_SECONDARY_CURRENCIES
             columns:
               - column:
                   name: CURRENCY_ISO_CODE
-            indexName: IDX_FK__AMOUNT__CURRENCY_ISO_CODE
-            tableName: AMOUNT
-
+            indexName: IDX_FK__ACCOUNT_SECONDARY_CURRENCIES__CURRENCY_ISO_CODE
+        - addForeignKeyConstraint:
+            constraintName: FK__ACCOUNT_SECONDARY_CURRENCIES__ACCOUNT_ID
+            baseTableName: ACCOUNT_SECONDARY_CURRENCIES
+            baseColumnNames: ACCOUNT_ID
+            referencedTableName: ACCOUNT
+            referencedColumnNames: ID
+            validate: true
+        - createIndex:
+            tableName: ACCOUNT_SECONDARY_CURRENCIES
+            columns:
+              - column:
+                  name: ACCOUNT_ID
+            indexName: IDX_FK__ACCOUNT_SECONDARY_CURRENCIES__ACCOUNT_ID
 
   - changeSet:
-      id: FX_RATE
+      id: POSITION
       author: Pk
       changes:
         - createTable:
-            tableName: FX_RATE
+            tableName: POSITION
             columns:
               - column:
                   name: ID
@@ -100,31 +145,136 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: BASE_CURRENCY_ISO_CODE
-                  type: varchar(3)
+                  name: ACCOUNT_ID
+                  type: bigint
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
-                  name: QUOTE_CURRENCY_ISO_CODE
-                  type: varchar(3)
+                  name: BUSINESS_DATE
+                  type: date
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
-                  name: RATE
+                  name: NAV_QUANTITY
                   type: decimal
                   constraints:
                     nullable: false
+              - column:
+                  name: NAV_CCY_ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
         - addForeignKeyConstraint:
-            constraintName: FK__FX_RATE__BASE_CURRENCY_ISO_CODE
-            baseTableName: FX_RATE
-            baseColumnNames: BASE_CURRENCY_ISO_CODE
+            constraintName: FK__POSITION__ACCOUNT_ID
+            baseTableName: POSITION
+            baseColumnNames: ACCOUNT_ID
+            referencedTableName: ACCOUNT
+            referencedColumnNames: ID
+            validate: true
+        - createIndex:
+            columns:
+              - column:
+                  name: ACCOUNT_ID
+            indexName: IDX_FK__POSITION__ACCOUNT_ID
+            tableName: POSITION
+        - addForeignKeyConstraint:
+            constraintName: FK__POSITION__NAV_ISO_CODE
+            baseTableName: POSITION
+            baseColumnNames: NAV_CCY_ISO_CODE
             referencedTableName: CURRENCY
             referencedColumnNames: ISO_CODE
             validate: true
         - createIndex:
             columns:
               - column:
-                  name: BASE_CURRENCY_ISO_CODE
-            indexName: IDX_FK__FX_RATE__BASE_CURRENCY_ISO_CODE
-            tableName: FX_RATE
+                  name: NAV_CCY_ISO_CODE
+            indexName: IDX_FK__POSITION__NAV_CCY_ISO_CODE
+            tableName: POSITION
 
+
+  - changeSet:
+      id: POSITION_HOLDING
+      author: Pk
+      changes:
+        - createTable:
+            tableName: POSITION_HOLDING
+            columns:
+              - column:
+                  name: POSITION_ID
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDINGS_QUANTITY
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDINGS_INSTRUMENT_ID
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDINGS_VALUE_IN_OTHER_CURRENCY_QUANTITY
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDINGS_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_QUANTITY
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            columnNames: POSITION_ID, HOLDINGS_INSTRUMENT_ID
+            constraintName: IDX_UNIQUE__POS_HLD__POS_ID_AND_INSTR_ID
+            tableName: POSITION_HOLDING
+        - addForeignKeyConstraint:
+            constraintName: FK__POSITION_HOLDING__HOLDINGS_INSTRUMENT_ID
+            baseTableName: POSITION_HOLDING
+            baseColumnNames: HOLDINGS_INSTRUMENT_ID
+            referencedTableName: CURRENCY
+            referencedColumnNames: ID
+            validate: true
+        - createIndex:
+            indexName: IDX_FK__POSITION_HOLDING__INSTRUMENT_ID
+            tableName: POSITION_HOLDING
+            columns:
+              - column:
+                  name: POSITION_ID
+        - addForeignKeyConstraint:
+            constraintName: FK__POSITION_HOLDING__HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
+            baseTableName: POSITION_HOLDING
+            baseColumnNames: HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
+            referencedTableName: CURRENCY
+            referencedColumnNames: ISO_CODE
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: FK__POSITION_HOLDING__HOLDINGS_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
+            baseTableName: POSITION_HOLDING
+            baseColumnNames: HOLDINGS_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
+            referencedTableName: CURRENCY
+            referencedColumnNames: ISO_CODE
+            validate: true
+        - addForeignKeyConstraint:
+            constraintName: FK__POSITION_HOLDING__POS_ID
+            baseTableName: POSITION_HOLDING
+            baseColumnNames: POSITION_ID
+            referencedTableName: POSITION
+            referencedColumnNames: ID
+            validate: true
+        - createIndex:
+            indexName: IDX_FK__POSITION_HOLDING__POS_ID
+            tableName: POSITION_HOLDING
+            columns:
+              - column:
+                  name: POSITION_ID

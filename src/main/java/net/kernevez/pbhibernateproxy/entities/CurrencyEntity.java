@@ -18,7 +18,6 @@ public class CurrencyEntity {
     @NaturalId
     /* Uppercase iso code of the currency, following ISO 4217  */
     private String isoCode;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BASE_CURRENCY_ISO_CODE", referencedColumnName = "isoCode")
     private CurrencyEntity baseCurrency;
