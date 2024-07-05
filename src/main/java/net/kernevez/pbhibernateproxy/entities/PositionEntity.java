@@ -3,8 +3,6 @@ package net.kernevez.pbhibernateproxy.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "POSITION")
@@ -16,22 +14,16 @@ public class PositionEntity {
     private AccountEntity account;
     private LocalDate businessDate;
     @Embedded
-    private EmbeddableAmount nav;
-    @ElementCollection
-    @CollectionTable(
-            name = "POSITION_HOLDING",
-            joinColumns = @JoinColumn(name = "POSITION_ID", referencedColumnName = "ID", nullable = false))
-    private List<PositionHolding> holdings = new ArrayList<>();
+    private PositionHolding holding;
 
     public PositionEntity() {
     }
 
-    public PositionEntity(Long id, AccountEntity account, LocalDate businessDate, EmbeddableAmount nav, List<PositionHolding> holdings) {
+    public PositionEntity(Long id, AccountEntity account, LocalDate businessDate, PositionHolding holding) {
         this.id = id;
         this.account = account;
         this.businessDate = businessDate;
-        this.nav = nav;
-        this.holdings = holdings;
+        this.holding = holding;
     }
 
     public Long getId() {
@@ -61,17 +53,8 @@ public class PositionEntity {
         return this;
     }
 
-    public EmbeddableAmount getNav() {
-        return nav;
-    }
-
-    public PositionEntity setNav(EmbeddableAmount nav) {
-        this.nav = nav;
-        return this;
-    }
-
-    public List<PositionHolding> getHoldings() {
-        return holdings;
+    public PositionHolding getHolding() {
+        return holding;
     }
 
 }

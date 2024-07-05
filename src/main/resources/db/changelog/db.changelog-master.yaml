@@ -155,12 +155,32 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: NAV_QUANTITY
+                  name: HOLDING_QUANTITY
                   type: decimal
                   constraints:
                     nullable: false
               - column:
-                  name: NAV_CCY_ISO_CODE
+                  name: HOLDING_INSTRUMENT_ID
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDING_VALUE_IN_OTHER_CURRENCY_QUANTITY
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDING_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDING_VALUE_IN_ACCOUNT_CURRENCY_QUANTITY
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: HOLDING_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
                   type: varchar(3)
                   constraints:
                     nullable: false
@@ -178,103 +198,41 @@ databaseChangeLog:
             indexName: IDX_FK__POSITION__ACCOUNT_ID
             tableName: POSITION
         - addForeignKeyConstraint:
-            constraintName: FK__POSITION__NAV_ISO_CODE
+            constraintName: FK__POSITION__HOLDING_INSTRUMENT_ID
             baseTableName: POSITION
-            baseColumnNames: NAV_CCY_ISO_CODE
+            baseColumnNames: HOLDING_INSTRUMENT_ID
             referencedTableName: CURRENCY
-            referencedColumnNames: ISO_CODE
+            referencedColumnNames: ID
             validate: true
         - createIndex:
-            columns:
-              - column:
-                  name: NAV_CCY_ISO_CODE
-            indexName: IDX_FK__POSITION__NAV_CCY_ISO_CODE
+            indexName: IDX_FK__POSITION__INSTRUMENT_ID
             tableName: POSITION
-
-
-  - changeSet:
-      id: POSITION_HOLDING
-      author: Pk
-      changes:
-        - createTable:
-            tableName: POSITION_HOLDING
             columns:
               - column:
-                  name: POSITION_ID
-                  type: bigint
-                  constraints:
-                    nullable: false
-              - column:
-                  name: HOLDINGS_QUANTITY
-                  type: decimal
-                  constraints:
-                    nullable: false
-              - column:
-                  name: HOLDINGS_INSTRUMENT_ID
-                  type: bigint
-                  constraints:
-                    nullable: false
-              - column:
-                  name: HOLDINGS_VALUE_IN_OTHER_CURRENCY_QUANTITY
-                  type: decimal
-                  constraints:
-                    nullable: false
-              - column:
-                  name: HOLDINGS_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
-                  type: varchar(3)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_QUANTITY
-                  type: decimal
-                  constraints:
-                    nullable: false
-              - column:
-                  name: HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
-                  type: varchar(3)
-                  constraints:
-                    nullable: false
-        - addUniqueConstraint:
-            columnNames: POSITION_ID, HOLDINGS_INSTRUMENT_ID
-            constraintName: IDX_UNIQUE__POS_HLD__POS_ID_AND_INSTR_ID
-            tableName: POSITION_HOLDING
+                  name: HOLDING_INSTRUMENT_ID
         - addForeignKeyConstraint:
-            constraintName: FK__POSITION_HOLDING__HOLDINGS_INSTRUMENT_ID
-            baseTableName: POSITION_HOLDING
-            baseColumnNames: HOLDINGS_INSTRUMENT_ID
-            referencedTableName: CURRENCY
-            referencedColumnNames: ID
-            validate: true
-        - createIndex:
-            indexName: IDX_FK__POSITION_HOLDING__INSTRUMENT_ID
-            tableName: POSITION_HOLDING
-            columns:
-              - column:
-                  name: POSITION_ID
-        - addForeignKeyConstraint:
-            constraintName: FK__POSITION_HOLDING__HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
-            baseTableName: POSITION_HOLDING
-            baseColumnNames: HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
+            constraintName: FK__POSITION__HOLDING_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
+            baseTableName: POSITION
+            baseColumnNames: HOLDING_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
             referencedTableName: CURRENCY
             referencedColumnNames: ISO_CODE
             validate: true
+        - createIndex:
+            indexName: IDX_FK__POSITION__HOLDING_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
+            tableName: POSITION
+            columns:
+              - column:
+                  name: HOLDING_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
         - addForeignKeyConstraint:
-            constraintName: FK__POSITION_HOLDING__HOLDINGS_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
-            baseTableName: POSITION_HOLDING
-            baseColumnNames: HOLDINGS_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
+            constraintName: FK__POSITION__HOLDING_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
+            baseTableName: POSITION
+            baseColumnNames: HOLDING_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
             referencedTableName: CURRENCY
             referencedColumnNames: ISO_CODE
             validate: true
-        - addForeignKeyConstraint:
-            constraintName: FK__POSITION_HOLDING__POS_ID
-            baseTableName: POSITION_HOLDING
-            baseColumnNames: POSITION_ID
-            referencedTableName: POSITION
-            referencedColumnNames: ID
-            validate: true
         - createIndex:
-            indexName: IDX_FK__POSITION_HOLDING__POS_ID
-            tableName: POSITION_HOLDING
+            indexName: IDX_FK__POSITION__HOLDING_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
+            tableName: POSITION
             columns:
               - column:
-                  name: POSITION_ID
+                  name: HOLDING_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE
