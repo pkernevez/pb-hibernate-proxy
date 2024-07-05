@@ -155,16 +155,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: HOLDING_QUANTITY
-                  type: decimal
-                  constraints:
-                    nullable: false
-              - column:
-                  name: HOLDING_INSTRUMENT_ID
-                  type: bigint
-                  constraints:
-                    nullable: false
-              - column:
                   name: HOLDING_VALUE_IN_OTHER_CURRENCY_QUANTITY
                   type: decimal
                   constraints:
@@ -197,19 +187,6 @@ databaseChangeLog:
                   name: ACCOUNT_ID
             indexName: IDX_FK__POSITION__ACCOUNT_ID
             tableName: POSITION
-        - addForeignKeyConstraint:
-            constraintName: FK__POSITION__HOLDING_INSTRUMENT_ID
-            baseTableName: POSITION
-            baseColumnNames: HOLDING_INSTRUMENT_ID
-            referencedTableName: CURRENCY
-            referencedColumnNames: ID
-            validate: true
-        - createIndex:
-            indexName: IDX_FK__POSITION__INSTRUMENT_ID
-            tableName: POSITION
-            columns:
-              - column:
-                  name: HOLDING_INSTRUMENT_ID
         - addForeignKeyConstraint:
             constraintName: FK__POSITION__HOLDING_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE
             baseTableName: POSITION

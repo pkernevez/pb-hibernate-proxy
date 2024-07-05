@@ -1,19 +1,12 @@
 package net.kernevez.pbhibernateproxy.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 
-import java.math.BigDecimal;
 import java.util.Objects;
-
-import static net.kernevez.pbhibernateproxy.entities.EmbeddableAmount.bigDecimalEquals;
 
 @Embeddable
 public class PositionHolding {
-    @Column(nullable = false)
-    private BigDecimal quantity;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private CurrencyEntity instrument;
     @Embedded
     private EmbeddableAmount valueInAccountCurrency;
     @Embedded
@@ -22,30 +15,10 @@ public class PositionHolding {
     public PositionHolding() {
     }
 
-    public PositionHolding(BigDecimal quantity, CurrencyEntity instrument, EmbeddableAmount valueInAccountCurrency,
+    public PositionHolding(EmbeddableAmount valueInAccountCurrency,
                            EmbeddableAmount valueInOtherCurrency) {
-        this.quantity = quantity;
-        this.instrument = instrument;
         this.valueInAccountCurrency = valueInAccountCurrency;
         this.valueInOtherCurrency = valueInOtherCurrency;
-    }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public PositionHolding setQuantity(BigDecimal quantity) {
-        this.quantity = quantity;
-        return this;
-    }
-
-    public CurrencyEntity getInstrument() {
-        return instrument;
-    }
-
-    public PositionHolding setInstrument(CurrencyEntity instrument) {
-        this.instrument = instrument;
-        return this;
     }
 
     public EmbeddableAmount getValueInAccountCurrency() {
@@ -70,16 +43,13 @@ public class PositionHolding {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PositionHolding that)) return false;
-        return bigDecimalEquals(getQuantity(), that.getQuantity())
-               && Objects.equals(getInstrument(), that.getInstrument())
-               && Objects.equals(getValueInAccountCurrency(), that.getValueInAccountCurrency())
+        return Objects.equals(getValueInAccountCurrency(), that.getValueInAccountCurrency())
                && Objects.equals(getValueInOtherCurrency(), that.getValueInOtherCurrency());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getQuantity().stripTrailingZeros(), getInstrument(),
-                            getValueInAccountCurrency(), getValueInOtherCurrency());
+        return Objects.hash(getValueInAccountCurrency(), getValueInOtherCurrency());
     }
 
 }
