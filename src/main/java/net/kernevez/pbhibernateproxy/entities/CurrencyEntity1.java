@@ -12,7 +12,7 @@ import org.hibernate.annotations.NaturalIdCache;
         usage = CacheConcurrencyStrategy.READ_WRITE
 )
 @SuppressWarnings("JpaDataSourceORMInspection")
-public class CurrencyEntity {
+public class CurrencyEntity1 {
     @Id
     private Long id;
     @NaturalId
@@ -20,22 +20,22 @@ public class CurrencyEntity {
     private String isoCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BASE_CURRENCY_ISO_CODE", referencedColumnName = "isoCode")
-    private CurrencyEntity baseCurrency;
+    private CurrencyEntity1 baseCurrency;
 
     public String getIsoCode() {
         return isoCode;
     }
 
-    public CurrencyEntity setIsoCode(String isoCode) {
+    public CurrencyEntity1 setIsoCode(String isoCode) {
         this.isoCode = isoCode;
         return this;
     }
 
-    public CurrencyEntity getBaseCurrency() {
+    public CurrencyEntity1 getBaseCurrency() {
         return baseCurrency;
     }
 
-    public CurrencyEntity setBaseCurrency(CurrencyEntity baseCurrency) {
+    public CurrencyEntity1 setBaseCurrency(CurrencyEntity1 baseCurrency) {
         this.baseCurrency = baseCurrency;
         return this;
     }

@@ -14,7 +14,7 @@ public class AccountEntity {
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "isoCode", nullable = false, name = "PRIMARY_CURRENCY_ISO_CODE")
-    private CurrencyEntity primaryCurrency;
+    private CurrencyEntity1 primaryCurrency;
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
@@ -24,7 +24,7 @@ public class AccountEntity {
             joinColumns = @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "CURRENCY_ISO_CODE", referencedColumnName = "isoCode")
     )
-    private Set<CurrencyEntity> secondaryCurrencies = new HashSet<>();
+    private Set<CurrencyEntity1> secondaryCurrencies = new HashSet<>();
 
     public Long getId() {
         return id;

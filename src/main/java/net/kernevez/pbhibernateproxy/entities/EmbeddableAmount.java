@@ -16,12 +16,12 @@ public class EmbeddableAmount {
     @SuppressWarnings("JpaDataSourceORMInspection")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "isoCode", nullable = false)
-    private CurrencyEntity ccy;
+    private CurrencyEntity1 ccy;
 
     public EmbeddableAmount() {
     }
 
-    public EmbeddableAmount(BigDecimal quantity, CurrencyEntity ccy) {
+    public EmbeddableAmount(BigDecimal quantity, CurrencyEntity1 ccy) {
         if (ccy == null) {
             throw new RuntimeException(format("Currency can't be null for an amount with a quantity of %s", quantity));
         }
@@ -46,11 +46,11 @@ public class EmbeddableAmount {
         return this;
     }
 
-    public CurrencyEntity getCcy() {
+    public CurrencyEntity1 getCcy() {
         return ccy;
     }
 
-    public EmbeddableAmount setCcy(CurrencyEntity ccy) {
+    public EmbeddableAmount setCcy(CurrencyEntity1 ccy) {
         this.ccy = ccy;
         return this;
     }
