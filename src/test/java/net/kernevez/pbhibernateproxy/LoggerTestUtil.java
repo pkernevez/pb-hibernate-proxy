@@ -63,6 +63,10 @@ public class LoggerTestUtil {
             assertEquals(actual, expected);
         }
 
+        public void assertNoLogs() {
+            assertLogs(List.of());
+        }
+
         public List<LogEvent> getEvents() {
             return appender.list.stream()
                                 .map(e -> new LogEvent(e.getLevel(), e.getFormattedMessage()))
