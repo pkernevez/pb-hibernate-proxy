@@ -13,11 +13,8 @@ public class BSCategoryEntity {
     private Long id;
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "PARENT_BS_CATEGORY_ID")
-    private BSCategoryEntity parent;
-
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
 //    @OrderColumn(name = "children_order")
     private List<BSCategoryEntity> children = new ArrayList<>();
 
@@ -38,22 +35,12 @@ public class BSCategoryEntity {
         return this;
     }
 
-    public BSCategoryEntity getParent() {
-        return parent;
-    }
-
-    public BSCategoryEntity setParent(BSCategoryEntity parent) {
-        this.parent = parent;
-        return this;
-    }
-
     public Stream<BSCategoryEntity> getChildren() {
         return children.stream();
     }
 
     public BSCategoryEntity addChild(BSCategoryEntity child) {
         this.children.add(child);
-        child.setParent(this);
         return this;
     }
 
