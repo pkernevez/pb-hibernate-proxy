@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import net.kernevez.pbhibernateproxy.entities.BSCategoryEntity;
 import net.kernevez.pbhibernateproxy.entities.BSCategoryRepository;
-import net.kernevez.pbhibernateproxy.entities.BSRepository;
 import org.hibernate.engine.spi.ActionQueue;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -16,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Transactional
 class PbLoadingTest {
-    @Autowired
-    private BSRepository bsRepository;
     @Autowired
     private BSCategoryRepository bsCategoryRepository;
 
