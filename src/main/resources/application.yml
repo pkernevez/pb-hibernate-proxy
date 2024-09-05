@@ -15,6 +15,20 @@ spring:
     properties:
       hibernate:
         show-sql: false
+        query:
+          plan_cache_max_size: 4096
+          fail_on_pagination_over_collection_fetch: true
+          in_clause_parameter_padding: true
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 40
+        session:
+          events:
+            log:
+              LOG_QUERIES_SLOWER_THAN_MS: 200
+        # Need for BLOB: hibernateFactory.getCurrentSession()
+        current_session_context_class: thread
     hibernate:
       ddl-auto: validate
       naming:
@@ -23,7 +37,8 @@ spring:
 
 logging:
   level:
+    root: info
     org.testcontainers.utility.RyukResourceReaper: error
-    org.hibernate.orm.jdbc.bind: trace
+    #    org.hibernate.orm.jdbc.bind: trace
     org.hibernate.stat: info
     org.hibernate.SQL: debug
