@@ -22,6 +22,30 @@ class PbLoadingTest {
     private EntityManager entityManager;
 
     @Test
+    void verySimpleCase() {
+        // Given
+        /*
+         * Create a link between 2 entities of same class
+         *  root
+         *   |-> child1
+         */
+        BSCategoryEntity root = new BSCategoryEntity(0L).setName("root");
+        BSCategoryEntity child1 = bsCategoryRepository.save(new BSCategoryEntity(1L).setName("child1"));
+        child1 = bsCategoryRepository.save(child1);
+        root = bsCategoryRepository.save(root);
+        root.addChild(child1);
+
+        // When
+        try (var asserter = LoggerTestUtil.createTestAppender(ActionQueue.class, Level.INFO)) {
+            entityManager.flush();
+            // Then...
+            // we have warning in the logs
+            asserter.assertLogEquals(Level.WARN,
+                                     "The batch containing 2 statements could not be sorted. This might indicate a circular entity relationship.");
+        }
+    }
+
+    @Test
     void noErrorDuringSavingWithoutBS() {
         // Given
         /*
