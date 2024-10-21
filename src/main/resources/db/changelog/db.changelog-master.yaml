@@ -22,19 +22,14 @@ databaseChangeLog:
                     unique: true
                     uniqueConstraintName: IDX_UNIQUE__BS_CATEGORY__NAME
               - column:
-                  name: PARENT_BS_CATEGORY_ID
+                  name: OTHER_ID
                   type: bigint
                   constraints:
                     nullable: true
-              - column:
-                  name: CHILDREN_ORDER
-                  type: integer
-                  constraints:
-                    nullable: true
         - addForeignKeyConstraint:
-            constraintName: FK__BS_CATEGORY__PARENT_BS_CATEGORY_ID
+            constraintName: FK__BS_CATEGORY__OTHER_ID
             baseTableName: BS_CATEGORY
-            baseColumnNames: PARENT_BS_CATEGORY_ID
+            baseColumnNames: OTHER_ID
             referencedTableName: BS_CATEGORY
             referencedColumnNames: ID
             validate: true
@@ -42,8 +37,8 @@ databaseChangeLog:
             tableName: BS_CATEGORY
             columns:
               - column:
-                  name: PARENT_BS_CATEGORY_ID
-            indexName: IDX_FK__BS_CATEGORY__PARENT_BS_CATEGORY_ID
+                  name: OTHER_ID
+            indexName: IDX_FK__BS_CATEGORY__OTHER_ID
 
 
   - changeSet:
