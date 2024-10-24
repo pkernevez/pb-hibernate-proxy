@@ -29,32 +29,26 @@ class PbWithRelationTest {
     @Autowired
     private EntityManager entityManager;
 
-    private final long ACC_ID = 637226063293710801L;
-    private final long USD_ID = 637226003797508422L;
+    private static final long ACC_ID = 637226063293710801L;
+    private static final long USD_ID = 637226003797508422L;
+    private static final long EUR_ID = 637225948625633732L;
 
     @Test
     @Sql(statements = {
-            "INSERT INTO CURRENCY (id, NAME, ISO_CODE, BASE_CURRENCY_ISO_CODE) values ( 637225948625633732, 'Currency EUR', 'EUR', null)",
+            "INSERT INTO CURRENCY (id, NAME, ISO_CODE, BASE_CURRENCY_ISO_CODE) values ( " + EUR_ID + ", 'Currency EUR', 'EUR', null)",
             "INSERT INTO CURRENCY (id, NAME, ISO_CODE, BASE_CURRENCY_ISO_CODE) values ( " + USD_ID + ", 'Currency USD', 'USD', null)",
             "INSERT INTO ACCOUNT  (id, NAME, PRIMARY_CURRENCY_ISO_CODE) values ( " + ACC_ID + ", 'JOHN DOE', 'EUR')",
             "INSERT INTO ACCOUNT_SECONDARY_CURRENCIES  (ACCOUNT_ID, CURRENCY_ISO_CODE) values ( " + ACC_ID + ", 'USD')",
-//            "INSERT INTO POSITION (id, ACCOUNT_ID, BUSINESS_DATE, NAV_QUANTITY, NAV_CCY_ISO_CODE) values ( 20, 10, '2024-01-23', 8000, 'EUR')",
-//            "INSERT INTO POSITION_HOLDING (POSITION_ID, HOLDINGS_QUANTITY, HOLDINGS_INSTRUMENT_ID, HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_QUANTITY,HOLDINGS_VALUE_IN_ACCOUNT_CURRENCY_CCY_ISO_CODE, HOLDINGS_VALUE_IN_OTHER_CURRENCY_QUANTITY, HOLDINGS_VALUE_IN_OTHER_CURRENCY_CCY_ISO_CODE) values ( 20, 9175, 2, null, null, 9175, 'USD')",
     })
     void createAnErrorWithProxy() {
         // Given
         LocalDate today = LocalDate.of(2024, 1, 23);
         AccountEntity account = accountRepository.findById(TSID.from(ACC_ID)).get();
         CurrencyEntity usd = currencyRepository.findById(TSID.from(USD_ID)).get();
-//        var lastPosition = sut.findFirstByAccountAndBusinessDateLessThanEqualOrderByBusinessDateDesc(account, today).get();
-//        var inflation = 1.01;
-//        var newHoldings = lastPosition.getHoldings().stream()
-//                                      .map(h -> new PositionHolding(h.getQuantity(), h.getInstrument(),
-//                                                                    h.getValueInAccountCurrency().multiply(inflation),
-//                                                                    h.getValueInOtherCurrency().multiply(inflation)))
-//                                      .toList();
+        CurrencyEntity chf = currencyRepository.findById(TSID.from(EUR_ID)).get();
+
         TSID posId = TSID.from("0HNZ2BFQBW0CE");
-        var newPosition = new PositionEntity(posId, account, today, null, List.of());
+        var newPosition = new PositionEntity(posId, account, today, new EmbeddableAmount(BigDecimal.TEN, chf), List.of());
         sut.save(newPosition);
         entityManager.flush();
         entityManager.clear();
@@ -62,7 +56,7 @@ class PbWithRelationTest {
         newPosition = positionRepository.getReferenceById(posId);
         newPosition.setNav(new EmbeddableAmount(BigDecimal.ZERO, usd));
 
-        // When
+        // When => Boom
         entityManager.flush();
 
         // Then...
