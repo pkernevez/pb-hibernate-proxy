@@ -158,12 +158,12 @@ databaseChangeLog:
                   name: NAV_QUANTITY
                   type: decimal
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: NAV_CCY_ISO_CODE
                   type: varchar(3)
                   constraints:
-                    nullable: false
+                    nullable: true
         - addForeignKeyConstraint:
             constraintName: FK__POSITION__ACCOUNT_ID
             baseTableName: POSITION

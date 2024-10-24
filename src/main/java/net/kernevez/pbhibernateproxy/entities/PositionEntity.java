@@ -1,6 +1,9 @@
 package net.kernevez.pbhibernateproxy.entities;
 
+import io.hypersistence.tsid.TSID;
 import jakarta.persistence.*;
+import net.kernevez.pbhibernateproxy.sql.TsidType;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,13 +13,21 @@ import java.util.List;
 @Table(name = "POSITION")
 public class PositionEntity {
     @Id
-    private Long id;
+    @Type(TsidType.class)
+    private TSID id;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "ACCOUNT_ID")
     private AccountEntity account;
     private LocalDate businessDate;
+
     @Embedded
+    @Column(nullable = true)
+    @AttributeOverrides({
+//            @AttributeOverride(name = "quantity", column = @Column(name = "NAV_QUANTITY")),
+            @AttributeOverride(name = "ccy", column = @Column(nullable = true))
+    })
     private EmbeddableAmount nav;
+
     @ElementCollection
     @CollectionTable(
             name = "POSITION_HOLDING",
@@ -26,7 +37,7 @@ public class PositionEntity {
     public PositionEntity() {
     }
 
-    public PositionEntity(Long id, AccountEntity account, LocalDate businessDate, EmbeddableAmount nav, List<PositionHolding> holdings) {
+    public PositionEntity(TSID id, AccountEntity account, LocalDate businessDate, EmbeddableAmount nav, List<PositionHolding> holdings) {
         this.id = id;
         this.account = account;
         this.businessDate = businessDate;
@@ -34,11 +45,11 @@ public class PositionEntity {
         this.holdings = holdings;
     }
 
-    public Long getId() {
+    public TSID getId() {
         return id;
     }
 
-    public PositionEntity setId(Long id) {
+    public PositionEntity setId(TSID id) {
         this.id = id;
         return this;
     }

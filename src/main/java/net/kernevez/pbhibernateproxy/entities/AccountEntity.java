@@ -1,6 +1,9 @@
 package net.kernevez.pbhibernateproxy.entities;
 
+import io.hypersistence.tsid.TSID;
 import jakarta.persistence.*;
+import net.kernevez.pbhibernateproxy.sql.TsidType;
+import org.hibernate.annotations.Type;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -10,7 +13,8 @@ import java.util.Set;
 @Table(name = "ACCOUNT")
 public class AccountEntity {
     @Id
-    private Long id;
+    @Type(TsidType.class)
+    private TSID id;
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "isoCode", nullable = false, name = "PRIMARY_CURRENCY_ISO_CODE")
@@ -26,11 +30,11 @@ public class AccountEntity {
     )
     private Set<CurrencyEntity> secondaryCurrencies = new HashSet<>();
 
-    public Long getId() {
+    public TSID getId() {
         return id;
     }
 
-    public AccountEntity setId(Long id) {
+    public AccountEntity setId(TSID id) {
         this.id = id;
         return this;
     }
