@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface PositionRepository extends JpaRepository<PositionEntity, TSID> {
 
-    Optional<PositionEntity> findFirstByAccountAndBusinessDateLessThanEqualOrderByBusinessDateDesc(AccountEntity account,
-                                                                                                   LocalDate businessDate);
+    Optional<PositionEntity> findFirstByBusinessDateLessThanEqualOrderByBusinessDateDesc(
+            LocalDate businessDate);
 }

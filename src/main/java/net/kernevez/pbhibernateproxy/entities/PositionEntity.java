@@ -15,9 +15,6 @@ public class PositionEntity {
     @Id
     @Type(TsidType.class)
     private TSID id;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ACCOUNT_ID")
-    private AccountEntity account;
     private LocalDate businessDate;
 
     @Embedded
@@ -37,9 +34,8 @@ public class PositionEntity {
     public PositionEntity() {
     }
 
-    public PositionEntity(TSID id, AccountEntity account, LocalDate businessDate, EmbeddableAmount nav, List<PositionHolding> holdings) {
+    public PositionEntity(TSID id, LocalDate businessDate, EmbeddableAmount nav, List<PositionHolding> holdings) {
         this.id = id;
-        this.account = account;
         this.businessDate = businessDate;
         this.nav = nav;
         this.holdings = holdings;
@@ -51,15 +47,6 @@ public class PositionEntity {
 
     public PositionEntity setId(TSID id) {
         this.id = id;
-        return this;
-    }
-
-    public AccountEntity getAccount() {
-        return account;
-    }
-
-    public PositionEntity setAccount(AccountEntity account) {
-        this.account = account;
         return this;
     }
 
