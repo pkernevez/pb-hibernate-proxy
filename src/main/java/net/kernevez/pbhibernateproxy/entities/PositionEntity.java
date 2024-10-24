@@ -1,7 +1,10 @@
 package net.kernevez.pbhibernateproxy.entities;
 
 import io.hypersistence.tsid.TSID;
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import net.kernevez.pbhibernateproxy.sql.TsidType;
 import org.hibernate.annotations.Type;
 
@@ -16,10 +19,6 @@ public class PositionEntity {
     private LocalDate businessDate;
 
     @Embedded
-    @Column(nullable = true)
-    @AttributeOverrides({
-            @AttributeOverride(name = "ccy", column = @Column(nullable = true))
-    })
     private EmbeddableAmount nav;
 
     public PositionEntity() {
