@@ -6,8 +6,6 @@ import net.kernevez.pbhibernateproxy.sql.TsidType;
 import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "POSITION")
@@ -20,25 +18,17 @@ public class PositionEntity {
     @Embedded
     @Column(nullable = true)
     @AttributeOverrides({
-//            @AttributeOverride(name = "quantity", column = @Column(name = "NAV_QUANTITY")),
             @AttributeOverride(name = "ccy", column = @Column(nullable = true))
     })
     private EmbeddableAmount nav;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "POSITION_HOLDING",
-            joinColumns = @JoinColumn(name = "POSITION_ID", referencedColumnName = "ID", nullable = false))
-    private List<PositionHolding> holdings = new ArrayList<>();
-
     public PositionEntity() {
     }
 
-    public PositionEntity(TSID id, LocalDate businessDate, EmbeddableAmount nav, List<PositionHolding> holdings) {
+    public PositionEntity(TSID id, LocalDate businessDate, EmbeddableAmount nav) {
         this.id = id;
         this.businessDate = businessDate;
         this.nav = nav;
-        this.holdings = holdings;
     }
 
     public TSID getId() {
@@ -66,10 +56,6 @@ public class PositionEntity {
     public PositionEntity setNav(EmbeddableAmount nav) {
         this.nav = nav;
         return this;
-    }
-
-    public List<PositionHolding> getHoldings() {
-        return holdings;
     }
 
 }

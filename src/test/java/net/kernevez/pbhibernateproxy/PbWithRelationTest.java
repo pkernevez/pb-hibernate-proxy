@@ -11,7 +11,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @SuppressWarnings({"SqlResolve", "SqlNoDataSourceInspection", "OptionalGetWithoutIsPresent"})
 @SpringBootTest
@@ -42,7 +41,7 @@ class PbWithRelationTest {
         CurrencyEntity chf = currencyRepository.findById(TSID.from(EUR_ID)).get();
 
         TSID posId = TSID.from("0HNZ2BFQBW0CE");
-        var newPosition = new PositionEntity(posId, today, new EmbeddableAmount(BigDecimal.TEN, chf), List.of());
+        var newPosition = new PositionEntity(posId, today, new EmbeddableAmount(BigDecimal.TEN, chf));
         sut.save(newPosition);
         entityManager.flush();
         entityManager.clear();
